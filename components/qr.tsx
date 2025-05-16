@@ -12,7 +12,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { Input } from "./ui/input"
+import { Input } from "@/components/ui/input"
 import { ColorPicker, IColor, useColor } from "react-color-palette"
 import "react-color-palette/css"
 import {
@@ -21,7 +21,7 @@ import {
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
-} from "./ui/sheet"
+} from "@/components/ui/sheet"
 
 // Define Extension type explicitly since it's not exported from the package
 
@@ -37,6 +37,9 @@ export default function QRC() {
 		setCornersColor,
 		setCornersDotColor,
 		resetColors,
+		setDotType,
+		setCornersSquareType,
+		setCornersDotType,
 	} = useOptionsStore()
 	const { qrCode, initializeQRCode } = useQRCodeStore()
 
@@ -76,9 +79,9 @@ export default function QRC() {
 
 	//color logic
 	const [colorBg, setColorBg] = useColor("#ffffff")
-	const [colorDot, setColorDot] = useColor("#ffffff")
-	const [colorCorner, setColorCorner] = useColor("#ffffff")
-	const [colorCornerDot, setColorCornerDot] = useColor("#ffffff")
+	const [colorDot, setColorDot] = useColor("#000000")
+	const [colorCorner, setColorCorner] = useColor("#000000")
+	const [colorCornerDot, setColorCornerDot] = useColor("#000000")
 
 	const handleBg = (color: IColor) => setBackgroundColor(color.hex)
 	const handleDot = (color: IColor) => setDotsColor(color.hex)
@@ -87,16 +90,21 @@ export default function QRC() {
 
 	return (
 		<div className='flex flex-col'>
-			<h2>Your QR Code</h2>
+			<h2 className='text-2xl font-bold text-center'>Your QR Code</h2>
 			<hr className='my-5' />
-			<div ref={ref}>Loading</div>
-			<div className='flex flex-col gap-5 pt-5'>
+			<div ref={ref} className='flex w-full justify-center'>
+				Loading
+			</div>
+			<div className='flex flex-col items-center gap-5 pt-5'>
 				<Input
+					className='w-full md:w-[400px] text-center'
 					value={options.data}
 					onChange={onDataChange}
 					placeholder='Website, text, etc'
 				/>
-				<div className='flex flex-col md:flex-row justify-center items-center w-full gap-5'>
+				<hr className='my-5 bg-primary h-0.5 md:hidden w-full' />
+				<div className='flex flex-wrap justify-center items-center w-full gap-5'>
+					<p className='text-xl font-bold'>Edit Colors</p>
 					<Sheet>
 						<SheetTrigger asChild>
 							<Button
@@ -202,6 +210,55 @@ export default function QRC() {
 						Reset Colors
 					</Button>
 				</div>
+				<hr className='my-5 bg-primary h-0.5 md:hidden w-full' />
+
+				<div className='flex flex-col md:flex-row justify-center items-center w-full gap-5'>
+					<p className='text-xl font-bold'>Select QR Style</p>
+					<Select
+						onValueChange={setDotType}
+						defaultValue={options.dotsOptions?.type}>
+						<SelectTrigger className='w-full md:w-[180px]'>
+							<SelectValue placeholder='Dot style' />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value='dots'>Dots</SelectItem>
+							<SelectItem value='rounded'>Rounded</SelectItem>
+							<SelectItem value='classy'>Classy</SelectItem>
+							<SelectItem value='classy-rounded'>
+								Classy Rounded
+							</SelectItem>
+							<SelectItem value='square'>Square</SelectItem>
+							<SelectItem value='extra-rounded'>
+								Extra Rounded
+							</SelectItem>
+						</SelectContent>
+					</Select>
+					<Select
+						onValueChange={setCornersSquareType}
+						defaultValue={options.cornersSquareOptions?.type}>
+						<SelectTrigger className='w-full md:w-[180px]'>
+							<SelectValue placeholder='Corner style' />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value='dot'>Dot</SelectItem>
+							<SelectItem value='square'>Square</SelectItem>
+							<SelectItem value='extra-rounded'>
+								Extra Rounded
+							</SelectItem>
+						</SelectContent>
+					</Select>
+					<Select
+						onValueChange={setCornersDotType}
+						defaultValue={options.cornersDotOptions?.type}>
+						<SelectTrigger className='w-full md:w-[180px]'>
+							<SelectValue placeholder='Corners dot style' />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value='dot'>Dot</SelectItem>
+							<SelectItem value='square'>Square</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
 				<div className='flex flex-col md:flex-row justify-center items-center w-full gap-5'>
 					<Select
 						onValueChange={onExtensionChange}
@@ -218,7 +275,7 @@ export default function QRC() {
 					</Select>
 					<Button
 						onClick={onDownloadClick}
-						className='inline-flex items-center gap-2 place-content-center'>
+						className='inline-flex items-center gap-2 w-full md:w-auto place-content-center'>
 						Download <RxDownload />
 					</Button>
 				</div>

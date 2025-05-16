@@ -1,16 +1,16 @@
-import { Options } from "qr-code-styling"
+import { CornerDotType, CornerSquareType, DotType, Options } from "qr-code-styling"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 // Define your types
-export type Extension = "svg" | "png" | "jpeg"
+export type Extension = "svg" | "png" | "jpeg" | "webp"
 export type DrawType = "svg" | "canvas"
 export type TypeNumber = number
 export type Mode = "Numeric" | "Alphanumeric" | "Byte" | "Kanji"
 export type ErrorCorrectionLevel = "L" | "M" | "Q" | "H"
-export type DotType = "rounded" | "dots" | "classy" | string
-export type CornerSquareType = "dot" | "square" | "extra-rounded"
-export type CornerDotType = "dot" | "square"
+// export type DotType = "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded"
+// export type CornerSquareType = "dot" | "square" | "extra-rounded"
+// export type CornerDotType = "dot" | "square"
 
 interface OptionsState {
 	options: Options
@@ -23,6 +23,9 @@ interface OptionsState {
 	setCornersColor: (color: string) => void
 	setCornersDotColor: (color: string) => void
 	resetColors: () => void
+	setDotType: (type: DotType) => void
+	setCornersSquareType: (type: CornerSquareType) => void
+	setCornersDotType: (type: CornerDotType) => void
 }
 
 export const useOptionsStore = create<OptionsState>()(
@@ -128,6 +131,36 @@ export const useOptionsStore = create<OptionsState>()(
 						cornersDotOptions: {
 							...state.options.cornersDotOptions,
 							color: "#222222",
+						},
+					},
+				})),
+			setDotType: (type) =>
+				set((state) => ({
+					options: {
+						...state.options,
+						dotsOptions: {
+							...state.options.dotsOptions,
+							type: type,
+						},
+					},
+				})),
+			setCornersSquareType: (type) =>
+				set((state) => ({
+					options: {
+						...state.options,
+						cornersSquareOptions: {
+							...state.options.cornersSquareOptions,
+							type: type,
+						},
+					},
+				})),
+			setCornersDotType: (type) =>
+				set((state) => ({
+					options: {
+						...state.options,
+						cornersDotOptions: {
+							...state.options.cornersDotOptions,
+							type: type,
 						},
 					},
 				})),
